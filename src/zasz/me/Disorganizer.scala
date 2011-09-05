@@ -6,8 +6,9 @@ import java.awt.geom.Rectangle2D.Float
 import java.util.{ArrayList}
 import collection.immutable.HashMap
 import scala.Predef._
-import java.awt.Color
 import sun.font.FontFamily
+import java.awt.image.BufferedImage
+import java.awt.{Font, Graphics, Color}
 
 class Disorganizer(var Tags: HashMap[String, Int], var Width: Integer, var Height: Integer)
 {
@@ -122,14 +123,12 @@ class Disorganizer(var Tags: HashMap[String, Int], var Width: Integer, var Heigh
     _Occupied += new Rectangle2D.Float(_Width, 0, 1, _Height)
   }
 
-  def Construct(Borders: HashMap[String, Rectangle2D.Float]): Bitmap =
+  def Construct(Borders: HashMap[String, Rectangle2D.Float]): BufferedImage =
   {
-    if (_ServiceObjectNew)
-      _ServiceObjectNew = false;
-    else
-      _Die("This object has been used. Dispose this, create and use a new Service object.");
-    var TheCloudBitmap = new Bitmap(_Width, _Height);
-    Graphics GImage = Graphics.FromImage(TheCloudBitmap);
+    if (_ServiceObjectNew) _ServiceObjectNew = false
+    else _Die("This object has been used. Dispose this, create and use a new Service object.")
+    var TheCloudBitmap = new BufferedImage(_Width, _Height)
+    val GImage: Graphics = Graphics.FromImage(TheCloudBitmap);
     GImage.TextRenderingHInteger = TextRenderingHInteger.AntiAlias;
     _Center = new Point2D.Float(TheCloudBitmap.Width / 2f, TheCloudBitmap.Height / 2f);
     if (Angle != 0) GImage.Rotate(_Center, Angle);
@@ -139,10 +138,12 @@ class Disorganizer(var Tags: HashMap[String, Int], var Width: Integer, var Heigh
     _FontHeightSpan = MaximumFontSize - MinimumFontSize;
     GImage.Clear(ColorChoice.GetBackGroundColor());
 
-    foreach(KeyValuePair < String, Integer > Tag in _TagsSorted)
+    foreach(var Tag: KeyValuePair[String, Integer]  in _TagsSorted)
     {
-      var FontToApply = new Font(SelectedFont, CalculateFontSize(Tag.Value));
-      SizeF StringBounds = GImage.MeasureString(Tag.Key, FontToApply);
+      val FontToApply = new Font(SelectedFont, CalculateFontSize(Tag.Value));
+      val StringBounds: Size2D = GImage.MeasureString(Tag.Key, FontToApply);
+
+
       StringFormat Format = DisplayChoice.GetFormat();
       boolean IsVertical = Format.FormatFlags.HasFlag(StringFormatFlags.DirectionVertical);
       if (IsVertical)

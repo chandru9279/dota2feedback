@@ -1,91 +1,69 @@
 package zasz.me
 
-public abstract class DisplayStrategy
-    {
-        public static readonly StringFormat HorizontalFormat;
-        public static readonly StringFormat VerticalFormat;
-        protected static readonly Random Seed;
-        private static readonly Dictionary<TagDisplayStrategy, DisplayStrategy> _Set;
+import util.Random
 
-        static DisplayStrategy()
-        {
-            VerticalFormat = new StringFormat();
-            HorizontalFormat = new StringFormat();
-            VerticalFormat.FormatFlags = StringFormatFlags.DirectionVertical;
-            Seed = new Random(DateTime.Now.Second);
+object DisplayStrategy
+{
 
-            _Set = new Dictionary<TagDisplayStrategy, DisplayStrategy>(6)
-                      {
-                          {TagDisplayStrategy.EqualHorizontalAndVertical, new EqualHorizontalAndVertical()},
-                          {TagDisplayStrategy.AllHorizontal, new AllHorizontal()},
-                          {TagDisplayStrategy.AllVertical, new AllVertical()},
-                          {TagDisplayStrategy.RandomHorizontalOrVertical, new RandomHorizontalOrVertical()},
-                          {TagDisplayStrategy.MoreHorizontalThanVertical, new RandomHorizontalOrVertical(0.25)},
-                          {TagDisplayStrategy.MoreVerticalThanHorizontal, new RandomHorizontalOrVertical(0.75)}
-                      };
-        }
+  import TagDisplayStrategy._
 
-        public static DisplayStrategy Get(TagDisplayStrategy DisplayStrategy)
-        {
-            return _Set[DisplayStrategy];
-        }
+  def HorizontalFormat: StringFormat = new StringFormat()
 
-        public abstract StringFormat GetFormat();
-    }
+  def VerticalFormat: StringFormat = new StringFormat()
 
-    internal class AllHorizontal : DisplayStrategy
-    {
-        public override StringFormat GetFormat()
-        {
-            return HorizontalFormat;
-        }
-    }
+  VerticalFormat.FormatFlags = StringFormatFlags.DirectionVertical
 
-    internal class AllVertical : DisplayStrategy
-    {
-        public override StringFormat GetFormat()
-        {
-            return VerticalFormat;
-        }
-    }
+  protected def Seed: Random = new Random(DateTime.Now.Second)
 
-    internal class RandomHorizontalOrVertical : DisplayStrategy
-    {
-        private readonly double _Split;
+  private def _Set = Map(
+    EqualHorizontalAndVertical -> new EqualHorizontalAndVertical(),
+    AllHorizontal -> new AllHorizontal(),
+    AllVertical -> new AllVertical(),
+    RandomHorizontalOrVertical -> new RandomHorizontalOrVertical(),
+    MoreHorizontalThanVertical -> new RandomHorizontalOrVertical(0.25),
+    MoreVerticalThanHorizontal -> new RandomHorizontalOrVertical(0.75)
+  )
 
-        public RandomHorizontalOrVertical(double Split = 0.5)
-        {
-            _Split = Split;
-        }
+  def Get(DisplayStrategy: TagDisplayStrategy): DisplayStrategy = _Set.get(DisplayStrategy)
+}
 
-        public override StringFormat GetFormat()
-        {
-            return Seed.NextDouble() > _Split ? HorizontalFormat : VerticalFormat;
-        }
-    }
+abstract class DisplayStrategy
+{
+  abstract def GetFormat(): StringFormat
+}
 
-    internal class EqualHorizontalAndVertical : DisplayStrategy
-    {
-        private bool _CurrentState;
+class AllHorizontal extends DisplayStrategy
+{
+  override def GetFormat(): StringFormat = HorizontalFormat
+}
 
-        public EqualHorizontalAndVertical()
-        {
-            _CurrentState = Seed.NextDouble() > 0.5;
-        }
+class AllVertical extends DisplayStrategy
+{
+  override def GetFormat(): StringFormat = VerticalFormat
+}
 
-        public override StringFormat GetFormat()
-        {
-            _CurrentState = !_CurrentState;
-            return _CurrentState ? HorizontalFormat : VerticalFormat;
-        }
-    }
+class RandomHorizontalOrVertical(private var Split: Double = 0.5) extends DisplayStrategy
+{
+  override def GetFormat(): StringFormat = if (Seed.NextDouble() > _Split) HorizontalFormat else VerticalFormat
+}
 
-    public enum TagDisplayStrategy
-    {
-        EqualHorizontalAndVertical,
-        AllHorizontal,
-        AllVertical,
-        RandomHorizontalOrVertical,
-        MoreHorizontalThanVertical,
-        MoreVerticalThanHorizontal
-    }
+class EqualHorizontalAndVertical(private var _CurrentState: Boolean = Seed.NextDouble() > 0.5) extends DisplayStrategy
+{
+  override def GetFormat(): StringFormat =
+  {
+    _CurrentState = !_CurrentState
+    if (_CurrentState) HorizontalFormat else VerticalFormat
+  }
+}
+
+
+object TagDisplayStrategy extends Enumeration
+{
+  type TagDisplayStrategy = Value
+  val EqualHorizontalAndVertical = Value("EqualHorizontalAndVertical")
+  val AllHorizontal = Value("AllHorizontal")
+  val AllVertical = Value("AllVertical")
+  val RandomHorizontalOrVertical = Value("RandomHorizontalOrVertical")
+  val MoreHorizontalThanVertical = Value("MoreHorizontalThanVertical")
+  val MoreVerticalThanHorizontal = Value("MoreVerticalThanHorizontal")
+}
