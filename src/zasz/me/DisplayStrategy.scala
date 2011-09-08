@@ -1,20 +1,13 @@
 package zasz.me
 
+import enums.TagDisplayStrategy._
+import enums.StringFormat._
 import util.Random
+import java.util.Date
+
 
 object DisplayStrategy
 {
-
-  import TagDisplayStrategy._
-
-  def HorizontalFormat: StringFormat = new StringFormat()
-
-  def VerticalFormat: StringFormat = new StringFormat()
-
-  VerticalFormat.FormatFlags = StringFormatFlags.DirectionVertical
-
-  protected def Seed: Random = new Random(DateTime.Now.Second)
-
   private def _Set = Map(
     EqualHorizontalAndVertical -> new EqualHorizontalAndVertical(),
     AllHorizontal -> new AllHorizontal(),
@@ -24,46 +17,39 @@ object DisplayStrategy
     MoreVerticalThanHorizontal -> new RandomHorizontalOrVertical(0.75)
   )
 
-  def Get(DisplayStrategy: TagDisplayStrategy): DisplayStrategy = _Set.get(DisplayStrategy)
+  def Get(DisplayStrategy: TagDisplayStrategy): DisplayStrategy = _Set(DisplayStrategy)
 }
 
 abstract class DisplayStrategy
 {
-  abstract def GetFormat(): StringFormat
+  protected def Seed: Random = new Random(new Date().getTime)
+
+  def GetFormat(): StringFormat
 }
 
 class AllHorizontal extends DisplayStrategy
 {
-  override def GetFormat(): StringFormat = HorizontalFormat
+  override def GetFormat(): StringFormat = Horizontal
 }
 
 class AllVertical extends DisplayStrategy
 {
-  override def GetFormat(): StringFormat = VerticalFormat
+  override def GetFormat(): StringFormat = Vertical
 }
 
 class RandomHorizontalOrVertical(private var Split: Double = 0.5) extends DisplayStrategy
 {
-  override def GetFormat(): StringFormat = if (Seed.NextDouble() > _Split) HorizontalFormat else VerticalFormat
+  override def GetFormat(): StringFormat = if (Seed.nextDouble() > Split) Horizontal else Vertical
 }
 
-class EqualHorizontalAndVertical(private var _CurrentState: Boolean = Seed.NextDouble() > 0.5) extends DisplayStrategy
+class EqualHorizontalAndVertical() extends DisplayStrategy
 {
+  private var _CurrentState: Boolean = Seed.nextBoolean()
   override def GetFormat(): StringFormat =
   {
     _CurrentState = !_CurrentState
-    if (_CurrentState) HorizontalFormat else VerticalFormat
+    if (_CurrentState) Horizontal else Vertical
   }
 }
 
 
-object TagDisplayStrategy extends Enumeration
-{
-  type TagDisplayStrategy = Value
-  val EqualHorizontalAndVertical = Value("EqualHorizontalAndVertical")
-  val AllHorizontal = Value("AllHorizontal")
-  val AllVertical = Value("AllVertical")
-  val RandomHorizontalOrVertical = Value("RandomHorizontalOrVertical")
-  val MoreHorizontalThanVertical = Value("MoreHorizontalThanVertical")
-  val MoreVerticalThanHorizontal = Value("MoreVerticalThanHorizontal")
-}
