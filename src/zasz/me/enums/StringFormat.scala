@@ -1,6 +1,7 @@
 package zasz.me.enums
 
-object StringFormat extends Enumeration {
+object StringFormat extends Enumeration
+{
   type StringFormat = Value
   val Vertical = Value("Vertical")
   val Horizontal = Value("Horizontal")

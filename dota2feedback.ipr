@@ -4,13 +4,17 @@
     <defaultAnt bundledAnt="true" />
   </component>
   <component name="ArtifactManager">
-    <artifact type="exploded-war" name="dota2feedback:war exploded">
-      <output-path>$PROJECT_DIR$/out/artifacts/dota2feedback_war_exploded</output-path>
-      <root id="root">
+    <artifact type="war" name="TheWAR">
+      <output-path>$PROJECT_DIR$/out/artifacts/TheWAR</output-path>
+      <root id="archive" name="TheWAR.war">
         <element id="javaee-facet-resources" facet="dota2feedback/web/Web" />
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
             <element id="module-output" name="dota2feedback" />
+          </element>
+          <element id="directory" name="lib">
+            <element id="library" level="project" name="Scala" />
+            <element id="library" level="application" name="scala-library-2.9.1" />
           </element>
         </element>
       </root>
@@ -86,7 +90,13 @@
         <root url="jar://$PROJECT_DIR$/lib/javax.servlet.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/javax.servlet.jsp.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/javax.servlet.jsp.jstl.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/lambdaj-2.3.3-with-dependencies.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Scala">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../FX/scala-2.9.1.final/lib/scala-library.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

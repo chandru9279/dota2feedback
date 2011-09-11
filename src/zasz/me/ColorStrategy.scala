@@ -1,36 +1,35 @@
 package zasz.me
 
-
 import enums.Style._
 import enums.Theme._
 import java.awt._
-import util.{Random=>Rand}
+import util.{Random => Rand}
 import java.util.Date
 
 object ColorStrategy
 {
-  var _Set = Map[Style, (Color, HslColor, Theme) => ColorStrategy]()
-  _Set += Fixed -> ((BgHsl, FgHsl, TheTheme) => new FixedForeground(BgHsl, FgHsl))
-  _Set += Varied -> ((BgHsl, FgHsl, TheTheme) => new VariedForeground(BgHsl, FgHsl, TheTheme))
-  _Set += RandomVaried -> ((BgHsl, FgHsl, TheTheme) => new RandomVaried(BgHsl, FgHsl, TheTheme))
-  _Set += Random -> ((BgHsl, FgHsl, TheTheme) => new RandomForeground(BgHsl, FgHsl))
-  _Set += Grayscale -> ((BgHsl, FgHsl, TheTheme) => new Grayscale(BgHsl, FgHsl, TheTheme))
+  private var strategySet = Map[Style, (Color, HslColor, Theme) => ColorStrategy]()
+  strategySet += Fixed -> ((BgHsl, FgHsl, TheTheme) => new FixedForeground(BgHsl, FgHsl))
+  strategySet += Varied -> ((BgHsl, FgHsl, TheTheme) => new VariedForeground(BgHsl, FgHsl, TheTheme))
+  strategySet += RandomVaried -> ((BgHsl, FgHsl, TheTheme) => new RandomVaried(BgHsl, FgHsl, TheTheme))
+  strategySet += Random -> ((BgHsl, FgHsl, TheTheme) => new RandomForeground(BgHsl, FgHsl))
+  strategySet += Grayscale -> ((BgHsl, FgHsl, TheTheme) => new Grayscale(BgHsl, FgHsl, TheTheme))
 
   def Get(TheTheme: Theme, TheStyle: Style, Background: Color, Foreground: Color): ColorStrategy =
   {
     import Implicits._
     val FgHsl: HslColor = if (TheTheme == LightBgDarkFg) Foreground.Darken else Foreground.Lighten
     if (Background.getAlpha != 255) /* Not interfering with any transparent color */
-      return _Set(TheStyle).apply(Background, FgHsl, TheTheme)
+      return strategySet(TheStyle).apply(Background, FgHsl, TheTheme)
     val BgHsl: HslColor = if (TheTheme == LightBgDarkFg) Background.Lighten else Background.Darken
-    _Set(TheStyle).apply(BgHsl.getRGB, FgHsl, TheTheme)
+    strategySet(TheStyle).apply(BgHsl.getRGB, FgHsl, TheTheme)
   }
 }
 
 abstract class ColorStrategy protected(protected var Background: Color, protected var Foreground: HslColor)
 {
   protected val _Seed = new Rand(new Date().getTime)
-  def GetBackGroundColor() : Color = Background
+  def GetBackGroundColor(): Color = Background
   def GetCurrentColor(): Color
 }
 
@@ -60,7 +59,7 @@ class VariedForeground(BackgroundVF: Color, ForegroundVF: HslColor, protected va
 
   override def GetCurrentColor(): Color =
   {
-    Foreground.adjustLuminance(_Seed.nextInt(50) *  + 1 + Range)
+    Foreground.adjustLuminance(_Seed.nextInt(50) * +1 + Range)
     Foreground.getRGB
   }
 }
@@ -80,10 +79,8 @@ class Grayscale(BackgroundGS: Color, ForegroundGS: HslColor, TheThemeGS: Theme) 
   * So luminance is now reduced to showing grayscale */
   Foreground.adjustSaturation(0)
   val Temp = if (TheTheme == LightBgDarkFg) Color.WHITE else Color.BLACK
-  Background = new Color(Temp.getRed, Temp.getGreen,  Temp.getBlue, Background.getAlpha)
+  Background = new Color(Temp.getRed, Temp.getGreen, Temp.getBlue, Background.getAlpha)
 }
-
-
 
 
 object Implicits

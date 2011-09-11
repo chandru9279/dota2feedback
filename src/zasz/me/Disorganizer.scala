@@ -10,11 +10,13 @@ import zasz.me.enums.Theme
 import zasz.me.enums.TagDisplayStrategy
 import zasz.me.enums.Style
 import collection.mutable.ListBuffer
-import java.lang.{Double, Boolean, Math, Exception}
-import java.lang.Float
+import java.lang.{Double, Boolean, Math, Exception, Float}
+import collection.JavaConverters._
+import reflect.BeanProperty
 
-class Disorganizer(var Tags: Map[String, Int], var Width: Int, var Height: Int)
+class Disorganizer(var InTags: java.util.HashMap[String, java.lang.Integer], var Width: Int, var Height: Int)
 {
+  var Tags = InTags.asScala.map(x=>(x._1, Int.unbox(x._2)))
   val _Increment: (Double) => Double = (X: Double) => X + 1
   val _Decrement: (Double) => Double = (X: Double) => X - 1
   val _Die = (Msg: String) => throw new Exception(Msg)
@@ -26,8 +28,8 @@ class Disorganizer(var Tags: Map[String, Int], var Width: Int, var Height: Int)
 
   private val _MaxEdgeSize: Int = if (Width >= Height) Width else Height;
   private val _SpiralEndSentinel: Point2D.Double = new Point2D.Double(_MaxEdgeSize + 10, _MaxEdgeSize + 10);
-  private val _MainArea: Rectangle2D.Double = new Rectangle2D.Double(0, 0, Width.asInstanceOf[Double], Height.asInstanceOf[Double]);
-  private val _TagsSorted: Map[String, Int] = Tags.toSeq.sortBy(_._2).toMap
+  private val _MainArea: Rectangle2D.Double = new Rectangle2D.Double(0, 0, Width, Height)
+  private val _TagsSorted: Map[String, Int] = Tags.toSeq.sortBy[Int](_._2).toMap
   private val _LowestWeight: Int = _TagsSorted.last._2
   private val _HighestWeight: Int = _TagsSorted.head._2
 
@@ -44,65 +46,65 @@ class Disorganizer(var Tags: Map[String, Int], var Width: Int, var Height: Int)
   /// <summary>
   ///   Default is Times New Roman
   /// </summary>
-  var SelectedFont: Font = new Font("Times New Roman", 0, 15)
+  @BeanProperty var SelectedFont: Font = new Font("Times New Roman", 0, 15)
 
   /// <summary>
   ///   Default is false, Enable to start seeing Word boundaries used for
   ///   collision detection.
   /// </summary>
-  var ShowWordBoundaries: Boolean = false
+  @BeanProperty var ShowWordBoundaries: Boolean = false
 
   /// <summary>
   ///   Set this to true, if vertical must needs to appear with RHS as floor
   ///   Default is LHS is the floor and RHS is ceiling of the Text.
   /// </summary>
-  var VerticalTextRight: Boolean = false
+  @BeanProperty var VerticalTextRight: Boolean = false
 
   /// <summary>
   ///   Size of the smallest String in the TagCloud
   /// </summary>
-  var MinimumFontSize: Float = 1f
+  @BeanProperty var MinimumFontSize: Float = 1f
 
   /// <summary>
   ///   Size of the largest String in the TagCloud
   /// </summary>
-  var MaximumFontSize: Float = 5f
+  @BeanProperty var MaximumFontSize: Float = 5f
 
   /// <summary>
   ///   Use <code>DisplayStrategy.Get()</code> to get a Display Strategy
   ///   Default is RandomHorizontalOrVertical.
   /// </summary>
-  var DisplayChoice: DisplayStrategy = DisplayStrategy.Get(TagDisplayStrategy.RandomHorizontalOrVertical)
+  @BeanProperty var DisplayChoice: DisplayStrategy = DisplayStrategy.Get(TagDisplayStrategy.AllVertical)
 
   /// <summary>
   ///   Use <code>ColorStrategy.Get()</code> to get a Color Strategy
   ///   Default is white background and random darker foreground colors.
   /// </summary>
-  var ColorChoice: ColorStrategy = ColorStrategy.Get(Theme.LightBgDarkFg, Style.RandomVaried, Color.WHITE, Color.BLACK)
+  @BeanProperty var ColorChoice: ColorStrategy = ColorStrategy.Get(Theme.LightBgDarkFg, Style.RandomVaried, Color.WHITE, Color.BLACK)
 
   /// <summary>
   ///   A rotate transform will be applied on the whole image based on this
   ///   Angle in degrees. Which means the Boundaries are not usable for hover animations
   ///   in CSS/HTML.
   /// </summary>
-  var Angle: Integer = 0
+  @BeanProperty var Angle: Int = 0
 
   /// <summary>
   ///   Default is false. Set this to true to crop out blank background.
   /// </summary>
-  var Crop: Boolean = false
+  @BeanProperty var Crop: Boolean = false
 
   /// <summary>
   ///   Default is 30px.
   /// </summary>
-  var Margin: Double = 30f
+  @BeanProperty var Margin: Double = 30f
 
   /// <summary>
   ///   Words that were not rendered because of non-availability
   ///   of free area to render them. If count is anything other than 0
   ///   use a bigger bitmap as input with more area.
   /// </summary>
-  var WordsSkipped: HashMap[String, Int] = new HashMap[String, Int];
+  @BeanProperty var WordsSkipped: HashMap[String, Int] = new HashMap[String, Int];
 
 
   /* Adding 4 Rectangles on the border to make sure that words dont go outside the border.
@@ -300,14 +302,4 @@ class Disorganizer(var Tags: Map[String, Int], var Width: Int, var Height: Int)
     _Occupied = _Occupied.map(It => new Rectangle2D.Double(It.getX - NewLeft, It.getY - NewTop, It.getWidth, It.getHeight))
     CloudToCrop.getSubimage(PopulatedArea.getX.toInt, PopulatedArea.getY.toInt, PopulatedArea.getWidth.toInt, PopulatedArea.getHeight.toInt);
   }
-
-  //
-  //  def drawStringWithFormat(g2d: Graphics2D, Format: StringFormat, tag: String, x: Int, y: Int) = {
-  //    if(Format == Vertical) {
-  //        g2d.rotate(-2 * Math.PI / angle)
-  //        g2d.drawString(tag, x, y);
-  //        g2d.rotate(2 * Math.PI / angle)
-  //    }
-  //    else g2d.drawString(tag, x, y)
-  //  }
 }
