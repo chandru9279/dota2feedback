@@ -30,16 +30,16 @@ object ColorStrategy
 abstract class ColorStrategy protected(protected var Background: Color, protected var Foreground: HslColor)
 {
   protected val _Seed = new Rand(new Date().getTime)
-
+  def GetBackGroundColor() : Color = Background
   def GetCurrentColor(): Color
 }
 
-class FixedForeground(Background: Color, Foreground: HslColor) extends ColorStrategy(Background, Foreground)
+class FixedForeground(BackgroundFF: Color, ForegroundFF: HslColor) extends ColorStrategy(BackgroundFF, ForegroundFF)
 {
   override def GetCurrentColor(): Color = Foreground.getRGB
 }
 
-class RandomForeground(Background: Color, Foreground: HslColor) extends FixedForeground(Background, Foreground)
+class RandomForeground(BackgroundRF: Color, ForegroundRF: HslColor) extends FixedForeground(BackgroundRF, ForegroundRF)
 {
   override def GetCurrentColor(): Color =
   {
@@ -48,9 +48,9 @@ class RandomForeground(Background: Color, Foreground: HslColor) extends FixedFor
   }
 }
 
-class VariedForeground(Background: Color, Foreground: HslColor, TheTheme: Theme) extends ColorStrategy(Background, Foreground)
+class VariedForeground(BackgroundVF: Color, ForegroundVF: HslColor, protected val TheTheme: Theme) extends ColorStrategy(BackgroundVF, ForegroundVF)
 {
-  protected var Range: Int
+  protected var Range: Int = 0
   /* Dark foreground needed, so Luminosity is reduced to somewhere between 0 & 0.5
   * Saturation is full so the color comes out, removing all blackness/greyness
   * For Light foreground Luminosity is kept between 0.5 & 1
@@ -65,7 +65,7 @@ class VariedForeground(Background: Color, Foreground: HslColor, TheTheme: Theme)
   }
 }
 
-class RandomVaried(Background: Color, Foreground: HslColor, TheTheme: Theme) extends VariedForeground(Background, Foreground, TheTheme)
+class RandomVaried(BackgroundRV: Color, ForegroundRV: HslColor, TheThemeRV: Theme) extends VariedForeground(BackgroundRV, ForegroundRV, TheThemeRV)
 {
   override def GetCurrentColor(): Color =
   {
@@ -74,7 +74,7 @@ class RandomVaried(Background: Color, Foreground: HslColor, TheTheme: Theme) ext
   }
 }
 
-class Grayscale(var Background: Color, Foreground: HslColor, TheTheme: Theme) extends VariedForeground(Background, Foreground, TheTheme)
+class Grayscale(BackgroundGS: Color, ForegroundGS: HslColor, TheThemeGS: Theme) extends VariedForeground(BackgroundGS, ForegroundGS, TheThemeGS)
 {
   /* Saturation is 0 - Meaning no color specified by hue can be seen at all.
   * So luminance is now reduced to showing grayscale */
