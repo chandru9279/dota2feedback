@@ -1,13 +1,12 @@
 package zasz.me.disorganizerfonts
 
 import java.awt._
-import javax.servlet.ServletContext
 
 object DisorganizerFonts extends Enumeration
 {
   type DisorganizerFonts = Value
 
-  def getFont(fontname: DisorganizerFonts, servletContext: ServletContext): Font =
+  def getFont(fontname: DisorganizerFonts): Font =
   {
     Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream(fontname.toString + ".ttf"))
   }

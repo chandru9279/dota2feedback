@@ -4,7 +4,6 @@ import java.awt.geom.{Point2D, Rectangle2D}
 import collection.mutable.HashMap
 import scala.Predef._
 import java.awt.image.BufferedImage
-import java.awt.{RenderingHints, Graphics2D, Font, Color}
 import zasz.me.enums.StringFormat._
 import zasz.me.enums.Theme
 import zasz.me.enums.TagDisplayStrategy
@@ -13,10 +12,12 @@ import collection.mutable.ListBuffer
 import java.lang.{Double, Boolean, Math, Exception, Float}
 import collection.JavaConverters._
 import reflect.BeanProperty
+import collection.immutable.ListMap
+import java.awt._
 
 class Disorganizer(var InTags: java.util.HashMap[String, java.lang.Integer], var Width: Int, var Height: Int)
 {
-  var Tags = InTags.asScala.map(x=>(x._1, Int.unbox(x._2)))
+  var Tags = InTags.asScala.map(x => (x._1, Int.unbox(x._2)))
   val _Increment: (Double) => Double = (X: Double) => X + 1
   val _Decrement: (Double) => Double = (X: Double) => X - 1
   val _Die = (Msg: String) => throw new Exception(Msg)
@@ -27,21 +28,22 @@ class Disorganizer(var InTags: java.util.HashMap[String, java.lang.Integer], var
     _Die("Way too low Width or Height for the cloud to be useful");
 
   private val _MaxEdgeSize: Int = if (Width >= Height) Width else Height;
-  private val _SpiralEndSentinel: Point2D.Double = new Point2D.Double(_MaxEdgeSize + 10, _MaxEdgeSize + 10);
   private val _MainArea: Rectangle2D.Double = new Rectangle2D.Double(0, 0, Width, Height)
-  private val _TagsSorted: Map[String, Int] = Tags.toSeq.sortBy[Int](_._2).toMap
-  private val _LowestWeight: Int = _TagsSorted.last._2
-  private val _HighestWeight: Int = _TagsSorted.head._2
+  private val _Center = new Point2D.Double(Width / 2f, Height / 2f);
+  private val _SpiralEndSentinel: Point2D.Double = new Point2D.Double(_MaxEdgeSize + 10, _MaxEdgeSize + 10);
+  private val _TagsSorted = ListMap[String, Int](Tags.toList.sortBy[Int](_._2): _*)
+  private val _HighestWeight: Int = _TagsSorted.last._2
+  private val _LowestWeight: Int = _TagsSorted.head._2
+  private val _WeightSpan: Int = _HighestWeight - _LowestWeight;
+  private val _Padding: Int = 8
 
   private var _Occupied: ListBuffer[Rectangle2D.Double] = new ListBuffer[Rectangle2D.Double]()
-  var _EdgeDirection: Double => Double = _Increment
-  var _WeightSpan: Int = 0
-  var _FontHeightSpan: Float = 0.0f
-  var _Center: Point2D.Double = null
-  var _CurrentCorner: Point2D.Double = null
-  var _CurrentEdgeSize: Int = 0
-  var _SleepingEdge: Boolean = false
-  var _ServiceObjectNew: Boolean = true
+  private var _EdgeDirection: Double => Double = _Increment
+  private var _FontHeightSpan: Float = 0.0f
+  private var _CurrentCorner: Point2D.Double = null
+  private var _CurrentEdgeSize: Int = 0
+  private var _SleepingEdge: Boolean = false
+  private var _ServiceObjectNew: Boolean = true
 
   /// <summary>
   ///   Default is Times New Roman
@@ -58,17 +60,17 @@ class Disorganizer(var InTags: java.util.HashMap[String, java.lang.Integer], var
   ///   Set this to true, if vertical must needs to appear with RHS as floor
   ///   Default is LHS is the floor and RHS is ceiling of the Text.
   /// </summary>
-  @BeanProperty var VerticalTextRight: Boolean = false
+  @BeanProperty var VerticalTextRight: Boolean = true
 
   /// <summary>
   ///   Size of the smallest String in the TagCloud
   /// </summary>
-  @BeanProperty var MinimumFontSize: Float = 1f
+  @BeanProperty var MinimumFontSize: Float = 12f
 
   /// <summary>
   ///   Size of the largest String in the TagCloud
   /// </summary>
-  @BeanProperty var MaximumFontSize: Float = 5f
+  @BeanProperty var MaximumFontSize: Float = 82f
 
   /// <summary>
   ///   Use <code>DisplayStrategy.Get()</code> to get a Display Strategy
@@ -122,50 +124,49 @@ class Disorganizer(var InTags: java.util.HashMap[String, java.lang.Integer], var
     val cloudImage = new BufferedImage(Width, Height, BufferedImage.TYPE_INT_ARGB)
     val GImage: Graphics2D = cloudImage.createGraphics()
     GImage.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    _Center = new Point2D.Double(cloudImage.getWidth / 2f, cloudImage.getHeight / 2f);
     if (Angle != 0) GImage.rotate((Angle * Math.PI / 180), _Center.x, _Center.y)
-    _WeightSpan = _HighestWeight - _LowestWeight;
     if (MaximumFontSize < MinimumFontSize)
       _Die("MaximumFontSize is less than MinimumFontSize");
     _FontHeightSpan = MaximumFontSize - MinimumFontSize
     GImage.setBackground(ColorChoice.GetBackGroundColor())
     GImage.clearRect(0, 0, Width, Height)
 
-    var Tag: (String, Int) = null
-    while (_TagsSorted.iterator.hasNext)
-    {
-      Tag = _TagsSorted.iterator.next()
-      GImage.setFont(SelectedFont.deriveFont(CalculateFontSize(Tag._2)))
-
-      val tempBounds: Rectangle2D = GImage.getFont.getStringBounds(Tag._1, GImage.getFontRenderContext);
-      var bounds = new Rectangle2D.Double(tempBounds.getX, tempBounds.getY, tempBounds.getWidth, tempBounds.getHeight)
-      val Format: StringFormat = DisplayChoice.GetFormat();
-      if (Format == Vertical)
-        bounds = new Rectangle2D.Double(bounds.getX, bounds.getY, bounds.getHeight, bounds.getWidth)
-      val TopLeft: Point2D.Double = CalculateWhere(bounds);
-      /* Strategy chosen display format, failed to be placed */
-      if (TopLeft.equals(_SpiralEndSentinel))
-      {
-        WordsSkipped.+=((Tag._1, Tag._2))
-      }
-      else
-      {
-        val IsVertical = Format == Vertical
-        val TextCenter: Point2D.Double = if (IsVertical & VerticalTextRight)
-          new Point2D.Double(TopLeft.getX + (bounds.getWidth / 2f), TopLeft.getY + (bounds.getHeight / 2f))
-        else TopLeft;
-        GImage.setColor(ColorChoice.GetCurrentColor())
-        if (IsVertical & VerticalTextRight) GImage.rotate(-Math.PI, TextCenter.getX, TextCenter.getY);
-        GImage.drawString(Tag._1, TopLeft.getX.toFloat, TopLeft.getY.toFloat);
-        if (IsVertical & VerticalTextRight) GImage.rotate(Math.PI, TextCenter.getX, TextCenter.getY);
-        val boundary = new Rectangle2D.Double(TopLeft.getX, TopLeft.getY, bounds.getWidth.toInt, bounds.getHeight.toInt)
-        if (ShowWordBoundaries) GImage.draw(boundary)
-        _Occupied + boundary
-      }
-    }
+    _TagsSorted.foreach(X => drawTag(X._1, X._2, GImage))
     GImage.dispose()
-    List.range(0, 4) foreach (X => _Occupied.remove(X))
+    _Occupied.remove(0, 4)
     if (Crop) CropAndTranslate(cloudImage) else cloudImage
+  }
+
+  def drawTag(tag: String, weight: Int, GImage: Graphics2D) =
+  {
+    GImage.setFont(SelectedFont.deriveFont(CalculateFontSize(weight)))
+    val metrics: FontMetrics = GImage.getFontMetrics
+    val lowerYaxisBy: Int = metrics.getMaxDescent + _Padding / 2;
+    val raiseXaxisBy: Int = _Padding / 2;
+    var bounds = new Rectangle2D.Double(0, 0, metrics.stringWidth(tag) + _Padding,
+      metrics.getHeight + _Padding)
+    val IsVertical: Boolean = DisplayChoice.GetFormat() == Vertical
+    if (IsVertical)
+      bounds = new Rectangle2D.Double(0, 0, bounds.height, bounds.width)
+    val TopLeft: Point2D.Double = CalculateWhere(bounds);
+    /* Strategy chosen display format, failed to be placed */
+    if (TopLeft.equals(_SpiralEndSentinel))
+    {
+      WordsSkipped.put(tag, weight)
+    }
+    else
+    {
+      GImage.setColor(ColorChoice.GetCurrentColor())
+      if (IsVertical)
+      {
+        GImage.rotate(Math.PI / 2.0, TopLeft.x, TopLeft.y)
+        GImage.drawString(tag, (TopLeft.x + raiseXaxisBy).toFloat, (TopLeft.y - lowerYaxisBy).toFloat)
+        GImage.rotate(-Math.PI / 2.0, TopLeft.x, TopLeft.y)
+      } else GImage.drawString(tag, (TopLeft.x + raiseXaxisBy).toFloat, (TopLeft.y - lowerYaxisBy + bounds.height).toFloat)
+      val boundary = new Rectangle2D.Double(TopLeft.x, TopLeft.y, bounds.width, bounds.height)
+      if (ShowWordBoundaries) GImage.draw(boundary)
+      _Occupied + boundary
+    }
   }
 
   def CalculateWhere(Measure: Rectangle2D.Double): Point2D.Double =
@@ -175,22 +176,22 @@ class Disorganizer(var InTags: java.util.HashMap[String, java.lang.Integer], var
     _CurrentCorner = _Center;
 
     var CurrentPoint: Point2D.Double = _Center;
-    while (TryPoint(CurrentPoint, Measure) == false)
-      CurrentPoint = GetNextPoIntegerInEdge(CurrentPoint);
+    while (TryPoint(CurrentPoint, Measure))
+      CurrentPoint = GetNextPointInEdge(CurrentPoint);
     CurrentPoint;
   }
 
   def TryPoint(TrialPoint: Point2D.Double, Rectangle: Rectangle2D.Double): Boolean =
   {
-    if (TrialPoint.equals(_SpiralEndSentinel)) return true;
-    val TrailRectangle = new Rectangle2D.Double(TrialPoint.x, TrialPoint.y, Rectangle.getWidth, Rectangle.getHeight);
-    !_Occupied.forall(It => !It.intersects(TrailRectangle));
+    if (TrialPoint.equals(_SpiralEndSentinel)) return false;
+    val TrailRectangle = new Rectangle2D.Double(TrialPoint.x, TrialPoint.y, Rectangle.width, Rectangle.height);
+    _Occupied.exists(_.intersects(TrailRectangle))
   }
 
   /*
    * This method gives poIntegers that crawls along an edge of the spiral, described below.
    */
-  def GetNextPoIntegerInEdge(Cur: Point2D.Double): Point2D.Double =
+  def GetNextPointInEdge(Cur: Point2D.Double): Point2D.Double =
   {
     var Current = Cur
     do
@@ -201,8 +202,8 @@ class Disorganizer(var InTags: java.util.HashMap[String, java.lang.Integer], var
         if (_CurrentCorner.equals(_SpiralEndSentinel)) return _SpiralEndSentinel;
       }
       Current = if (Current.x == _CurrentCorner.x)
-        new Point2D.Double(Current.getX, _EdgeDirection(Current.getY))
-      else new Point2D.Double(_EdgeDirection(Current.getX), Current.y)
+        new Point2D.Double(Current.x, _EdgeDirection(Current.y))
+      else new Point2D.Double(_EdgeDirection(Current.x), Current.y)
     } while (!_MainArea.contains(Current))
     Current
   }
@@ -230,27 +231,23 @@ class Disorganizer(var InTags: java.util.HashMap[String, java.lang.Integer], var
    *   3   X  X  X  X  X     | '---' |
    *   4   X  X  X  X  X     '-------'
    *
-   *
-   * Depth of Recursion is meant to be at most ONE in this method,
-   * and only when outlying edges are to be skipped.
-   *
    */
 
   def GetSpiralNext(PreviousCorner: Point2D.Double): Point2D.Double =
   {
-    var X: Double = PreviousCorner.getX
-    var Y = PreviousCorner.getY;
+    var X: Double = PreviousCorner.x
+    var Y = PreviousCorner.y;
     val EdgeSizeEven: Boolean = (_CurrentEdgeSize & 1) == 0;
 
     if (_SleepingEdge)
     {
-      X = if (EdgeSizeEven) PreviousCorner.getX - _CurrentEdgeSize else PreviousCorner.getX + _CurrentEdgeSize;
+      X = if (EdgeSizeEven) PreviousCorner.x - _CurrentEdgeSize else PreviousCorner.x + _CurrentEdgeSize;
       _SleepingEdge = false;
       /* Next edge will be standing. Sleeping = Parallal to X-Axis; Standing = Parallal to Y-Axis */
     }
     else
     {
-      Y = if (EdgeSizeEven) PreviousCorner.getY - _CurrentEdgeSize else PreviousCorner.getY + _CurrentEdgeSize;
+      Y = if (EdgeSizeEven) PreviousCorner.y - _CurrentEdgeSize else PreviousCorner.y + _CurrentEdgeSize;
       _CurrentEdgeSize = _CurrentEdgeSize + 1;
       _SleepingEdge = true;
     }
@@ -271,8 +268,8 @@ class Disorganizer(var InTags: java.util.HashMap[String, java.lang.Integer], var
   {
     // Strange case where all tags have equal weights
     if (_WeightSpan == 0) return (MinimumFontSize + MaximumFontSize) / 2f
-    // Convert the Weight Integero a 0-1 range (Double)
-    val WeightScaled: Float = (Weight - _LowestWeight) / _WeightSpan;
+    // Convert the Weight Integer to a 0-1 range (Double)
+    val WeightScaled: Float = (Weight - _LowestWeight.toFloat) / _WeightSpan;
     // Convert the 0-1 range Integero a value in the Font range.
     (WeightScaled * _FontHeightSpan) + MinimumFontSize
   }
@@ -286,11 +283,11 @@ class Disorganizer(var InTags: java.util.HashMap[String, java.lang.Integer], var
   /// <returns>The cropped version of the bitmap</returns>
   def CropAndTranslate(CloudToCrop: BufferedImage): BufferedImage =
   {
-    var NewTop = _Occupied.map(x => scala.Double.box(x.getY)).min(Ordering[Double]) - Margin
-    var NewLeft = _Occupied.map(x => scala.Double.box(x.getX)).min(Ordering[Double]) - Margin
+    var NewTop = _Occupied.map(x => scala.Double.box(x.y)).min(Ordering[Double]) - Margin
+    var NewLeft = _Occupied.map(x => scala.Double.box(x.x)).min(Ordering[Double]) - Margin
 
-    var Bottom = _Occupied.map(x => scala.Double.box(x.getY + x.getHeight)).max(Ordering[Double]) + Margin
-    var Right = _Occupied.map(x => scala.Double.box(x.getX + x.getWidth)).max(Ordering[Double]) + Margin
+    var Bottom = _Occupied.map(x => scala.Double.box(x.y + x.height)).max(Ordering[Double]) + Margin
+    var Right = _Occupied.map(x => scala.Double.box(x.x + x.width)).max(Ordering[Double]) + Margin
 
     if (NewTop < 0) NewTop = 0;
     if (NewLeft < 0) NewLeft = 0;
@@ -299,7 +296,7 @@ class Disorganizer(var InTags: java.util.HashMap[String, java.lang.Integer], var
     if (Right > Width) Right = Width;
 
     val PopulatedArea = new Rectangle2D.Double(NewLeft, NewTop, Right - NewLeft, Bottom - NewTop);
-    _Occupied = _Occupied.map(It => new Rectangle2D.Double(It.getX - NewLeft, It.getY - NewTop, It.getWidth, It.getHeight))
-    CloudToCrop.getSubimage(PopulatedArea.getX.toInt, PopulatedArea.getY.toInt, PopulatedArea.getWidth.toInt, PopulatedArea.getHeight.toInt);
+    _Occupied = _Occupied.map(It => new Rectangle2D.Double(It.x - NewLeft, It.y - NewTop, It.width, It.height))
+    CloudToCrop.getSubimage(PopulatedArea.x.toInt, PopulatedArea.y.toInt, PopulatedArea.width.toInt, PopulatedArea.height.toInt);
   }
 }

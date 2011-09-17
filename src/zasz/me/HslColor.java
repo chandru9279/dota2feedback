@@ -379,8 +379,15 @@ public class HslColor
 		float g = Math.max(0, HueToRGB(p, q, h));
 		float b = Math.max(0, HueToRGB(p, q, h - (1.0f / 3.0f)));
 
-		return new Color(r, g, b, alpha);
+		return new Color(s(r), s(g), s(b), s(alpha));
 	}
+
+    private static float s(float f)
+    {
+        if(f > 1.0) return 1.0f;
+        else if(f < 0.0) return 0.0f;
+        else return f;
+    }
 
 	private static float HueToRGB(float p, float q, float h)
 	{

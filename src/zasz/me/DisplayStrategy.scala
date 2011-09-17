@@ -1,5 +1,6 @@
 package zasz.me
 
+import enums.TagDisplayStrategy
 import enums.TagDisplayStrategy._
 import enums.StringFormat._
 import util.Random
@@ -8,13 +9,13 @@ import java.util.Date
 
 object DisplayStrategy
 {
-  private def _Set = Map(
-    EqualHorizontalAndVertical -> new EqualHorizontalAndVertical(),
-    AllHorizontal -> new AllHorizontal(),
-    AllVertical -> new AllVertical(),
-    RandomHorizontalOrVertical -> new RandomHorizontalOrVertical(),
-    MoreHorizontalThanVertical -> new RandomHorizontalOrVertical(0.25),
-    MoreVerticalThanHorizontal -> new RandomHorizontalOrVertical(0.75)
+  private def _Set: Map[TagDisplayStrategy, DisplayStrategy] = Map(
+    TagDisplayStrategy.EqualHorizontalAndVertical -> new EqualHorizontalAndVertical(),
+    TagDisplayStrategy.AllHorizontal -> new AllHorizontal(),
+    TagDisplayStrategy.AllVertical -> new AllVertical(),
+    TagDisplayStrategy.RandomHorizontalOrVertical -> new RandomHorizontalOrVertical(),
+    TagDisplayStrategy.MoreHorizontalThanVertical -> new RandomHorizontalOrVertical(0.20),
+    TagDisplayStrategy.MoreVerticalThanHorizontal -> new RandomHorizontalOrVertical(0.80)
   )
 
   def Get(DisplayStrategy: TagDisplayStrategy): DisplayStrategy = _Set(DisplayStrategy)
