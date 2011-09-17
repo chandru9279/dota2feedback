@@ -1,3 +1,9 @@
 *.iml
 *.iws
 out/
+
+/server/tomcat-7.0.20/logs
+/server/tomcat-7.0.20/work
+/server/tomcat-7.0.20/temp
+/server/solrhome/data
+/server/solrhome/logs

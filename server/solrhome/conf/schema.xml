@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<schema name="Dota2Feedback_Schema" version="1.4">
+  <types>
+  </types>
+  <fields>
+  </fields>
+  <uniqueKey>TODO</uniqueKey>
+  <defaultSearchField>TODO</defaultSearchField>
+  <solrQueryParser defaultOperator="OR" />
+</schema>

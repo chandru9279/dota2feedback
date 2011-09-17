@@ -4,9 +4,9 @@
     <defaultAnt bundledAnt="true" />
   </component>
   <component name="ArtifactManager">
-    <artifact type="war" name="TheWAR">
-      <output-path>$PROJECT_DIR$/out/artifacts/TheWAR</output-path>
-      <root id="archive" name="TheWAR.war">
+    <artifact type="war" name="D2FWar">
+      <output-path>$PROJECT_DIR$/server/tomcat-7.0.20/webapps</output-path>
+      <root id="archive" name="D2FWar.war">
         <element id="javaee-facet-resources" facet="dota2feedback/web/Web" />
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
@@ -15,6 +15,7 @@
           <element id="directory" name="lib">
             <element id="library" level="project" name="Scala" />
             <element id="library" level="application" name="scala-library-2.9.1" />
+            <element id="library" level="project" name="Java EE 6" />
           </element>
         </element>
       </root>

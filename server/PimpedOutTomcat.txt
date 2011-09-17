@@ -1,0 +1,12 @@
+This is a Windows 32-bit tomcat, pimped out for dota2feedback project, Hoping it runs on linux as well
+
+
+Removed the text files at the home directory.
+Removed all the native compilations.
+Removed all the example apps.
+WARed all the manager apps, and set unpackWars=false in server.xml
+Removed AJP connector in server.xml, renamed service, host & engine, removed comments
+Added zasz user in tomcat-users for admin and management.
+Also added digest="md5" on the <Realm> in server.xml and put in an MD5 in tomcat-users, with digest.bat
+Renamed apache-solr-3.3.0.war into solr.war for easy url access
+Changed tomcat/conf/logging.properties to include SOLR logs

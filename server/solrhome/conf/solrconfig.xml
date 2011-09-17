@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <abortOnConfigurationError>${solr.abortOnConfigurationError:true}</abortOnConfigurationError>
+  <luceneMatchVersion>LUCENE_33</luceneMatchVersion>
+  <dataDir>${solr.data.dir:}</dataDir>
+  <directoryFactory name="DirectoryFactory" class="${solr.directoryFactory:solr.StandardDirectoryFactory}" />
+  <indexDefaults>
+    <useCompoundFile>false</useCompoundFile>
+    <mergeFactor>10</mergeFactor>
+    <ramBufferSizeMB>32</ramBufferSizeMB>
+    <maxFieldLength>10000</maxFieldLength>
+    <writeLockTimeout>1000</writeLockTimeout>
+    <commitLockTimeout>10000</commitLockTimeout>
+    <lockType>native</lockType>
+  </indexDefaults>
+  <mainIndex>
+    <useCompoundFile>false</useCompoundFile>
+    <ramBufferSizeMB>32</ramBufferSizeMB>
+    <mergeFactor>10</mergeFactor>
+    <unlockOnStartup>false</unlockOnStartup>
+    <reopenReaders>true</reopenReaders>
+    <deletionPolicy class="solr.SolrDeletionPolicy">
+      <str name="maxCommitsToKeep">1</str>
+      <str name="maxOptimizedCommitsToKeep">0</str>
+    </deletionPolicy>
+    <infoStream file="INFOSTREAM.txt">false</infoStream>
+  </mainIndex>
+  <jmx />
+  <updateHandler class="solr.DirectUpdateHandler2">
+  </updateHandler>
+  <query>
+    <maxBooleanClauses>1024</maxBooleanClauses>
+    <filterCache class="solr.FastLRUCache" size="512" initialSize="512" autowarmCount="0" />
+    <queryResultCache class="solr.LRUCache" size="512" initialSize="512" autowarmCount="0" />
+    <documentCache class="solr.LRUCache" size="512" initialSize="512" autowarmCount="0" />
+    <enableLazyFieldLoading>true</enableLazyFieldLoading>
+    <queryResultWindowSize>20</queryResultWindowSize>
+    <queryResultMaxDocsCached>200</queryResultMaxDocsCached>
+    <listener event="newSearcher" class="solr.QuerySenderListener">
+      <arr name="queries">
+      </arr>
+    </listener>
+    <listener event="firstSearcher" class="solr.QuerySenderListener">
+      <arr name="queries">
+        <lst>
+          <str name="q">static firstSearcher warming in solrconfig.xml</str>
+        </lst>
+      </arr>
+    </listener>
+    <useColdSearcher>false</useColdSearcher>
+    <maxWarmingSearchers>2</maxWarmingSearchers>
+  </query>
+  <requestDispatcher handleSelect="true">
+    <requestParsers enableRemoteStreaming="true" multipartUploadLimitInKB="2048000" />
+    <httpCaching never304="true" />
+  </requestDispatcher>
+  <requestHandler name="/update" class="solr.XmlUpdateRequestHandler">
+  </requestHandler>
+  <requestHandler name="/cloud" class="solr.SearchHandler" startup="lazy">
+    <lst name="defaults">
+      <str name="q.alt">*:*</str>
+      <int name="rows">1</int>
+    </lst>
+    <lst name="invariants">
+      <str name="tv.fl">TODO</str>
+      <str name="fl">TODO</str>
+      <str name="wt">json</str>
+      <bool name="tv">true</bool>
+      <bool name="tv.tf">true</bool>
+      <bool name="tv.df">false</bool>
+    </lst>
+    <arr name="components">
+      <str>query</str>
+      <str>termVectors</str>
+    </arr>
+  </requestHandler>
+  <requestHandler name="/admin/" class="solr.admin.AdminHandlers" />
+  <requestHandler name="/admin/ping" class="solr.PingRequestHandler">
+    <lst name="defaults">
+      <str name="qt">search</str>
+      <str name="q">solrpingquery</str>
+      <str name="echoParams">all</str>
+    </lst>
+  </requestHandler>
+  <requestHandler name="/debug/dump" class="solr.DumpRequestHandler">
+    <lst name="defaults">
+      <str name="echoParams">explicit</str>
+      <str name="echoHandler">true</str>
+    </lst>
+  </requestHandler>
+  <searchComponent name="termVectors" class="solr.TermVectorComponent" />
+  <admin>
+    <defaultQuery>*:*</defaultQuery>
+  </admin>
+</config>
