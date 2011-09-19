@@ -15,7 +15,7 @@ import reflect.BeanProperty
 import collection.immutable.ListMap
 import java.awt._
 
-class Disorganizer(var InTags: java.util.HashMap[String, java.lang.Integer], var Width: Int, var Height: Int)
+class Disorganizer(var InTags: java.util.Map[String, java.lang.Integer], var Width: Int, var Height: Int)
 {
   var Tags = InTags.asScala.map(x => (x._1, Int.unbox(x._2)))
   val _Increment: (Double) => Double = (X: Double) => X + 1

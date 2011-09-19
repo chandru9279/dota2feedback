@@ -1,4 +1,4 @@
-package zasz.me;
+package zasz.me.models;
 
 import java.awt.Color;
 

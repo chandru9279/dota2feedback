@@ -3,6 +3,7 @@ package zasz.me
 import enums.Style._
 import enums.Theme._
 import java.awt._
+import models.HslColor
 import util.{Random => Rand}
 import java.util.Date
 

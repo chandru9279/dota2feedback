@@ -15,7 +15,7 @@
           <element id="directory" name="lib">
             <element id="library" level="project" name="Scala" />
             <element id="library" level="application" name="scala-library-2.9.1" />
-            <element id="library" level="project" name="Java EE 6" />
+            <element id="library" level="project" name="D2FLib" />
           </element>
         </element>
       </root>
@@ -44,6 +44,9 @@
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="deprecated" />
+    </list>
   </component>
   <component name="ExcludeFromValidation">
     <file url="file://$PROJECT_DIR$/src/zasz/me/Disorganizer.scala" />
@@ -73,24 +76,19 @@
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
   </component>
   <component name="libraryTable">
-    <library name="Java EE 6">
+    <library name="D2FLib">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/javax.annotation.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/javax.ejb.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/javax.jms.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/javax.persistence.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/javax.transaction.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/javax.resource.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/javax.servlet.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/javax.servlet.jsp.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/javax.servlet.jsp.jstl.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/httpclient-4.1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/gson-1.6.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/httpcore-4.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.1.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

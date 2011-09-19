@@ -56,22 +56,18 @@
   </requestDispatcher>
   <requestHandler name="/update" class="solr.XmlUpdateRequestHandler">
   </requestHandler>
-  <requestHandler name="/cloud" class="solr.SearchHandler" startup="lazy">
+  <requestHandler name="/cloud" class="solr.SearchHandler">
     <lst name="defaults">
-      <str name="q.alt">*:*</str>
-      <int name="rows">1</int>
+      <str name="terms.fl">Id</str>
+      <str name="terms.limit">50</str>
     </lst>
     <lst name="invariants">
-      <str name="tv.fl">TODO</str>
-      <str name="fl">TODO</str>
+      <str name="terms.sort">count</str>
       <str name="wt">json</str>
-      <bool name="tv">true</bool>
-      <bool name="tv.tf">true</bool>
-      <bool name="tv.df">false</bool>
+      <bool name="terms">true</bool>
     </lst>
     <arr name="components">
-      <str>query</str>
-      <str>termVectors</str>
+      <str>terms</str>
     </arr>
   </requestHandler>
   <requestHandler name="/admin/" class="solr.admin.AdminHandlers" />
@@ -88,7 +84,7 @@
       <str name="echoHandler">true</str>
     </lst>
   </requestHandler>
-  <searchComponent name="termVectors" class="solr.TermVectorComponent" />
+  <searchComponent name="terms" class="solr.TermsComponent" />
   <admin>
     <defaultQuery>*:*</defaultQuery>
   </admin>
