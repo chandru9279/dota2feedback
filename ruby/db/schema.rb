@@ -39,8 +39,8 @@ ActiveRecord::Schema.define(:version => 20110827011720) do
   end
 
   add_index "changes", ["category", "comments_count"], :name => "index_changes_on_category_and_comments_count"
-  add_index "changes", ["category", "dislikes", "name"], :name => "index_changes_on_category_and_dislikes"
-  add_index "changes", ["category", "likes", "name"], :name => "index_changes_on_category_and_likes"
+  add_index "changes", ["category", "dislikes", "name"], :name => "index_changes_on_category_and_dislikes_and_name"
+  add_index "changes", ["category", "likes", "name"], :name => "index_changes_on_category_and_likes_and_name"
   add_index "changes", ["category", "name"], :name => "index_changes_on_category_and_name"
 
   create_table "comments", :force => true do |t|
@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(:version => 20110827011720) do
     t.datetime "updated_at",    :null => false
   end
 
-  add_index "votes", ["ip_address", "voteable_type", "voteable_id"], :name => "ip_address"
+  add_index "votes", ["ip_address", "voteable_type", "voteable_id"], :name => "index_votes_on_ip_address_and_voteable_type_and_voteable_id"
   add_index "votes", ["voteable_type", "voteable_id"], :name => "index_votes_on_voteable_type_and_voteable_id"
 
 end
