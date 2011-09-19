@@ -1,0 +1,25 @@
+<p>
+    <label>Order by</label>
+    <select name="order">
+        <option value="(likes - dislikes) DESC, created_at ASC">Most liked</option>
+        <option value="created_at ASC">Oldest first</option>
+        <option value="created_at DESC">Newest first</option>
+    </select>
+</p>
+
+<% comments.each do |comment| %>
+    <div class="comment clear" id="comment-<%= comment.id %>">
+        <%= image_tag comment.email.blank? ? 'anonymous.png' : comment.gravatar_url %>
+        <div class="body">
+            <p>
+                <b><%= comment.name.blank? ? 'Anonymous' : comment.name %></b> on <%= l(comment.created_at, :format => :short) %> (<%= time_ago_in_words(comment.created_at) %> ago)
+                <span style="float: right">
+                    <a href="/comments/<%= comment.to_param %>/votes" class="thumbs_up" title="Click to Like this"><%= comment.likes %> likes</a>
+                    <a href="/comments/<%= comment.to_param %>/votes" class="thumbs_down" title="Click to Dislike this"><%= comment.dislikes %> dislikes</a>
+                    = <span class="result"><%= comment.score %> (<%= approval(comment) %>)</span><br/>
+                </span>
+            </p>
+            <%= simple_format comment.text %>
+        </div>
+    </div>
+<% end %>

@@ -1,0 +1,6 @@
+var comment = $('#comments-<%= @commentable.id %>');
+$(comment).find('td').html('');
+$(comment).find('td').append('<%= escape_javascript render(:partial => '/comments/new', :locals => { :commentable => @commentable, :comment => @comment }) %>');
+$(comment).find('td').append('<%= escape_javascript render(:partial => '/comments/comments', :locals => { :comments => @comments }) %>');
+$(comment).find('form').submitWithAjax();
+$("html, body").animate({scrollTop: $("#comment-<%= @id %>").offset().top}, "fast");

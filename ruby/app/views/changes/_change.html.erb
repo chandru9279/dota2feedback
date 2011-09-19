@@ -1,0 +1,5 @@
+<span class="big"><%= change.name %></span><br/>
+<a href="/changes/<%= change.to_param %>/votes" class="thumbs_up" title="Click to Like this"><%= change.likes %> likes</a>
+<a href="/changes/<%= change.to_param %>/votes" class="thumbs_down" title="Click to Dislike this"><%= change.dislikes %> dislikes</a>
+= <span class="result"><%= change.score %> (<%= approval(change) %>)</span><br/>
+<a href="/changes/<%= change.to_param %>/comments" class="view_comments" data-count="<%= change.comments_count %>">View comments (<%= change.comments_count %>)</a>

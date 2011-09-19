@@ -1,0 +1,33 @@
+<%= form_for change, :url => change.new_record? ? '/admin/changes' : "/admin/changes/#{change.to_param}", :html => { :multipart => true } do |f| %>
+    <%= f.error_messages %>
+    <p>
+        <%= f.label :name %> <span class="description">(Required)</span>
+        <%= f.text_field :name %>
+    </p>
+    <p>
+        <%= f.label :category %> <span class="description">(Required)</span>
+        <%= f.select :category, Change::TYPES %>
+    </p>
+    <p>
+        <%= image_tag change.icon.url %><br/>
+        <%= f.label :icon %> <%= check_box_tag 'remove_icon', false %> <%= label_tag 'remove_icon' %>
+        <%= f.file_field :icon %> 
+    </p>
+    <p>
+        <%= image_tag change.face.url %><br/>
+        <%= f.label :face %> <%= check_box_tag 'remove_face', false %> <%= label_tag 'remove_face' %>
+        <%= f.file_field :face %>
+    </p>
+    <p>
+        <%= image_tag change.screenshot.url %><br/>
+        <%= f.label :screenshot %> <%= check_box_tag 'remove_screenshot', false %> <%= label_tag 'remove_screenshot' %>
+        <%= f.file_field :screenshot %>
+    </p>
+    <p>
+        <%= f.label :full_screenshot %> <%= check_box_tag 'remove_full_screenshot', false %> <%= label_tag 'remove_full_screenshot' %>
+        <%= f.file_field :full_screenshot %>
+    </p>
+    <p>
+        <%= f.submit change.new_record? ? 'Create Change' : 'Edit Change', :class => 'button' %>
+    </p>
+<% end %>

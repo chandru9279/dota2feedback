@@ -1,0 +1,10 @@
+var classname = '<%= @vote.voteable.class.name.downcase %>'
+
+<% if @vote.option == Vote::LIKE %>
+    var thumbs = $('#' + classname + '-' + <%= @vote.voteable.id %> + ' .thumbs_up');
+    $(thumbs).text((parseInt($(thumbs).text()) + 1) + ' likes');
+<% end %>
+<% if @vote.option == Vote::DISLIKE %>
+    var thumbs = $('#' + classname + '-' + <%= @vote.voteable.id %> + ' .thumbs_down');
+    $(thumbs).text((parseInt($(thumbs).text()) + 1) + ' dislikes');
+<% end %>

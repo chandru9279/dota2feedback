@@ -1,0 +1,9 @@
+var comments = $('#comments-<%= @commentable.id %>');
+$(comments).prev().prev().find('.view_comments').html('Hide Comments');
+$(comments).find('td').html('');
+$(comments).find('td').append('<%= escape_javascript render(:partial => '/comments/new', :locals => { :commentable => @commentable, :comment => @comment }) %>');
+$(comments).find('td').append('<%= escape_javascript render(:partial => '/comments/comments', :locals => { :comments => @comments }) %>');
+$(comments).find('form').submitWithAjax();
+$(comments).processReady();
+$(comments).selectSort();
+$(comments).show();

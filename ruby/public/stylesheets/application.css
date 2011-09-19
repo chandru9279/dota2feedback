@@ -1,0 +1,119 @@
+* { margin: 0; padding: 0 }
+
+body { background: #d8dce0 url('images/background.png') repeat-x; font-family: Arial, Tahoma, Calibri, Verdana, Geneva, sans-serif; font-size: 14px; margin: 20px 20px 40px }
+a { color: #337fe5; text-decoration: none }
+a:hover { text-decoration: underline }
+img { border: none; vertical-align: middle }
+
+table { border-spacing: 0; width: 100% }
+th { background: #ddd url('images/background_th.png') repeat-x; border-bottom: 1px solid #aaa; font-size: 11px; font-weight: normal; line-height: 22px; padding: 0 10px }
+td { background: #fff; border-bottom: 1px solid #b9b9b9; text-align: center; padding: 10px }
+table tr:nth-child(even) td { background: #eee }
+
+input, label, select { vertical-align: middle }
+textarea { height: 150px; height: 100px; padding: 4px; width: 100% }
+select { padding: 2px }
+
+input, textarea, select { outline: none }
+
+input { padding: 4px }
+form input[type=text], form input[type=password], form textarea { background: #fff url('images/background_input.png') repeat-x }
+form input[type=text], form input[type=password], form input[type=file], form textarea, form select { display: block; margin-top: 5px; border: 1px solid #aaa }
+form .button { cursor: pointer; margin: 0 }
+form .inline input, form .inline textarea, form .inline select { display: inline-block; margin: 0 }
+form .description, form .block_description { color: #666; vertical-align: middle }
+
+p, h1, h2, h3, .margin { margin: 20px 0 }
+
+/* -----------------------------
+   --- IDS
+   -----------------------------*/
+
+#wrapper { width: 1000px; margin: 0 auto }
+#header h1 { margin: 0 }
+#header .description { color: #000 }
+#menu { float: right; font-size: 1.2em; margin-top: -5px }
+#menu a { color: #003ea8; text-decoration: underline }
+#breadcrumb { background: #fff; border: 1px solid #ddd; line-height: 30px; padding: 0 10px }
+
+#loading { display: none; position: fixed; text-align: center; top: 0; width: 100%; z-index: 100 }
+#loading .text { background: #ffc; border: 1px solid #000; border-width: 0 1px 1px 1px; display: inline-block; font-weight: bold; line-height: 30px; padding: 0 75px }
+
+/* -----------------------------
+   --- CLASSES
+   -----------------------------*/
+
+.change a { line-height: 18px; display: inline-block }
+.comments, .dummy { display: none }
+.comments td { text-align: left }
+.comments p, .comments .errorExplanation { margin: 10px 0 }
+
+.comment { background: #eee url('images/background_comment.png') repeat-x; border: 1px solid #b9b9b9; padding: 0 10px; margin-top: 10px }
+    .comment img { margin: 10px 0; float: left; width: 64px; height: 64px }
+    .comment .body { margin-left: 74px }
+    
+.new_comment { margin-top: 0 }
+
+.thumbs_up, .thumbs_down { padding-left: 20px; margin: 0 5px; line-height: 18px; display: inline-block }
+.thumbs_up { background: url('images/thumbs_up.gif') no-repeat; color: #090 }
+.thumbs_down { background: url('images/thumbs_down.gif') no-repeat; color: #900 }
+a.thumbs_up:hover, a.thumbs_down:hover, .active { background-position: 0 -18px }
+
+.l { text-align: left }
+.c { text-align: center }
+.r { text-align: right }
+.highlight { color: #337fe5 }
+.expand { width: 100% }
+
+.options { float: right }
+
+.big { color: #000; font-family: tahoma; font-size: 18px; margin-bottom: 5px; display: inline-block }
+.clear { height: 100% }
+.clear:after { clear: both; content: ""; display: block }
+
+.box { margin: 20px 0 }
+.title { background: #5590d3 url('images/background_title.png') repeat-x; color: #fff; line-height: 24px; padding: 0 10px }
+.top { background: #c9e2fc; border-bottom: 1px solid #aaa; line-height: 30px; padding: 0 8px }
+.content { background: #fff; padding: 0 10px }
+.content_block { display: inline-block; width: 100% }
+.bottom { background: #c9e2fc; border-top: 1px solid #aaa; line-height: 30px; padding: 0 8px; margin-top: -1px }
+
+.button, .pagination a, .pagination .disabled { background: #ddd url('images/background_button.png') repeat-x; border: 1px solid #ababab; color: #999; display: inline-block; font-size: 13px; line-height: 21px; margin-bottom: 5px; padding: 0 4px }
+.button, .pagination a { color: #000 }
+.button:hover, .pagination a:hover, .pagination span:hover { text-decoration: none }
+input.button { padding: 4px }
+
+.tops { margin-bottom: -20px }
+.tops img { height: 50px }
+.tops a { color: #000 }
+.half { width: 50%; float: left }
+.top_liked { margin-right: 10px }
+.top_hated { margin-left: 10px }
+
+/* -----------------------------
+   --- RAILS
+   -----------------------------*/
+
+.errorExplanation, #error_explanation { background: #fcc; border: 1px solid #900; color: #900; font-size: 100%; margin: 20px 0; padding: 0 10px }
+    .errorExplanation h2 { display: none }
+    .errorExplanation p, #error_explanation h2 { font-weight: bold; padding: 0; margin: 10px 0; font-size: 1.0em }
+    .errorExplanation ul, #error_explanation ul { font-weight: normal; margin: 10px 0 10px 30px }
+    .errorExplanation li, #error_explanation li { padding: 0 }
+
+div.success, div.error, div.info, div.notice, div.alert { padding: 5px 10px; margin: 20px 0 }
+    div.success, div.notice { background: #e6ffe7; border: 1px solid #090; color: #090 }
+    div.errorExplanation, div.error, div.alert { background: #fcc; border: 1px solid #900; color: #900 }
+    div.info { background: #ffc; border: 1px solid #990; color: #333 }
+    
+/* -----------------------------
+   --- CSS 3
+   -----------------------------*/
+
+#header h1 { text-shadow: #ccc 1px 1px 1px }
+.comments h2 { text-shadow: #ccc 1px 1px 1px }
+.box, #breadcrumb { -webkit-box-shadow: 5px 5px 5px #ccc; -moz-box-shadow: 5px 5px 5px #ccc }
+.title { -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-top-left-radius: 5px; -moz-border-top-right-radius: 5px }
+.bottom { -webkit-border-bottom-left-radius: 5px; -webkit-border-bottom-right-radius: 5px; -moz-border-bottom-left-radius: 5px; -moz-border-bottom-right-radius: 5px }
+.button, .pagination a, .pagination .disabled { -webkit-border-radius: 5px; -webkit-box-shadow: 1px 1px 0 #fff; -moz-border-radius: 5px; -moz-box-shadow: 1px 1px 0 #fff }
+textarea { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box }
+input[type=text]:focus, input[type=password]:focus, textarea:focus, select:focus { -webkit-box-shadow: 0 0 3px #06f; -moz-box-shadow: 0 0 3px #06f; box-shadow: 0 0 3px #06f }

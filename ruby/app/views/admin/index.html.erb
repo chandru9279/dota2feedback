@@ -1,0 +1,39 @@
+<%= breadcrumb [['Home', '/'], ['Admin CP', '/admin']] %>
+
+<div class="box">
+    <div class="title c">Change</div>
+    <div class="top r">
+        <%= link_to 'New Change', '/admin/changes/new', :class => 'button' %>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th class="expand">Name</th>
+                <th>Icon</th>
+                <th>Face</th>
+                <th>Screenshot</th>
+                <th style="width: 50px"></th>
+                <th style="width: 50px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @changes.each do |change| %>
+                 <tr id="change-<%= change.id %>">
+                    <td class="change">
+                        <%= render :partial => '/changes/change', :locals => { :change => change} %>
+                    </td>
+                    <td><%= image_tag change.icon.url %></td>
+                    <td><%= image_tag change.face.url %></td>
+                    <td><%= image_tag change.screenshot.url %></td>
+                    <td><%= link_to 'Edit', "/admin/changes/#{change.to_param}/edit" %></td>
+                    <td><%= link_to 'Delete', "/admin/changes/#{change.to_param}", :method => :delete, :confirm => 'Delete Change?' %></td>
+                </tr>
+                <tr class="dummy"><td colspan="6"></td></tr>
+                <tr id="comments-<%= change.id %>" class="comments"><td colspan="6"></td></tr>
+            <% end %>
+        </tbody>
+    </table>
+    <div class="bottom r">
+        <%= link_to 'New Change', '/admin/changes/new', :class => 'button' %>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="comment new_comment clear">
+    <%= form_for [commentable, comment] do |f| %>
+        <%= f.error_messages %>
+        <p>
+            <%= f.label :name %> <span class="description">(Optional)</span>
+            <%= f.text_field :name, :size => 50 %>
+        </p>
+        <p>
+            <%= f.label :email %> <span class="description">(Optional, won't be published, for Gravatar only)</span>
+            <%= f.text_field :email, :size => 50 %>
+        </p>
+        <p>
+            <%= f.text_area :text %>
+        </p>
+        <p>
+            <%= f.submit 'Post Comment', :class => 'button' %>
+        </p>
+    <% end %>
+</div>

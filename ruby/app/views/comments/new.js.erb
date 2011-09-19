@@ -1,0 +1,3 @@
+var comment = $('#comments-<%= @commentable.id %>');
+$(comment).find('td .new_comment').replaceWith('<%= escape_javascript render(:partial => '/comments/new', :locals => { :commentable => @commentable, :comment => @comment }) %>');
+$(comment).find('form').submitWithAjax();

@@ -1,0 +1,67 @@
+<div class="info c">
+    Welcome to DOTA 2 Feedback. I created this site so people could give feedback to Valve about how they liked the hero model changes in DOTA 2<br/>
+    This site is not in any way affiliated with Valve
+</div>
+
+<% if category == 'Skill' %>
+    <div class="success c">
+        Complete list of skill's Icons and Screenshots coming soon after Beta Release. Meanwhile, send me pics that are not listed here to my email:<br/>(victorcisneiros(at)gmail.com)
+    </div>
+<% end %>
+
+<p id="breadcrumb" class="c" style="font-size: 1.2em">
+    <%= category_link 'Hero', '/' %> |
+    <%= category_link 'Item', '/item' %> |
+    <%= category_link 'Skill', '/skill' %> |
+    <%= category_link 'Miscellaneous', '/miscellaneous' %>
+</p>
+
+<div class="clear tops" style="margin-top: -20px">
+    <div class="half">
+        <%= render :partial => '/root/top_liked' %>
+    </div>
+
+    <div class="half">
+        <%= render :partial => '/root/top_hated' %>
+    </div>
+</div>
+
+<div class="box">
+    <div class="title c"><%= category.pluralize.titleize %></div>
+    <table>
+        <thead>
+            <tr>
+                <th class="expand">Name</th>
+                <% if Change::SECTIONS[category].include?(:icon) %>
+                    <th>Icon</th>
+                <% end %>
+                <% if Change::SECTIONS[category].include?(:face) %>
+                    <th>Face</th>
+                <% end %>
+                <% if Change::SECTIONS[category].include?(:screenshot) %>
+                    <th>Screenshot</th>
+                <% end %>
+            </tr>
+        </thead>
+        <tbody>
+            <% @changes.each do |change| %>
+                <tr id="change-<%= change.id %>">
+                    <td class="change">
+                        <%= render :partial => '/changes/change', :locals => { :change => change} %>
+                    </td>
+                    <% if Change::SECTIONS[category].include?(:icon) %>
+                        <td><%= image_tag change.icon.url %></td>
+                    <% end %>
+                    <% if Change::SECTIONS[category].include?(:face) %>
+                        <td><%= image_tag change.face.url %></td>
+                    <% end %>
+                    <% if Change::SECTIONS[category].include?(:screenshot) %>
+                        <td><%= screenshot(change) %></td>
+                    <% end %>
+                </tr>
+                <tr class="dummy"><td colspan="4"></td></tr>
+                <tr id="comments-<%= change.id %>" class="comments"><td colspan="4"></td></tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>

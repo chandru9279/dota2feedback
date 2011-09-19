@@ -1,0 +1,10 @@
+<%= breadcrumb [['Home', '/'], ['Admin CP', '/admin'], ['Edit Change', "/admin/changes/#{@change.to_param}/edit"]] %>
+
+<div class="box">
+    <div class="title">Edit Change</div>
+    <div class="content">
+        <div class="content_block">
+            <%= render :partial => '/admin/changes/form', :locals => { :change => @change } %>
+        </div>
+    </div>
+</div>

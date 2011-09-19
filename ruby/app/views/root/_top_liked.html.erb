@@ -1,0 +1,21 @@
+<div class="box top_liked">
+    <div class="title c">Top Liked <%= category.pluralize.titleize %></div>
+    <div class="top ajax r clear">
+        <%= will_paginate @top_liked, :inner_window => 2, :outer_window => 0, :params => { :controller => 'root', :action => 'top_liked' } %>
+    </div>
+    <table>
+        <tbody>
+            <% @top_liked.each do |change| %>
+                <tr>
+                    <td class="change expand">
+                        <a href="#change-<%= change.id %>" class="big"><%= change.name %></a><br/>
+                        <span class="thumbs_up"><%= change.likes %> likes</span>
+                        <span class="thumbs_down"><%= change.dislikes %> dislikes</span>
+                        = <span class="result"><%= change.score %> (<%= approval(change) %>)</span><br/>
+                    </td>
+                    <td><%= change.icon.exists? ? image_tag(change.icon.url) : image_tag(change.screenshot.url) %></td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>

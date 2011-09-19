@@ -1,0 +1,10 @@
+<%= breadcrumb [['Home', '/'], ['Admin CP', '/admin'], ['New Change', '/admin/changes/new']] %>
+
+<div class="box">
+    <div class="title">New Change</div>
+    <div class="content">
+        <div class="content_block">
+            <%= render :partial => '/admin/changes/form', :locals => { :change => @change } %>
+        </div>
+    </div>
+</div>
