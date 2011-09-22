@@ -28,6 +28,10 @@
         <%= f.file_field :full_screenshot %>
     </p>
     <p>
+        <%= f.label :full_screenshot_link %>
+        <%= f.text_field :full_screenshot_link %>
+    </p>
+    <p>
         <%= f.submit change.new_record? ? 'Create Change' : 'Edit Change', :class => 'button' %>
     </p>
 <% end %>

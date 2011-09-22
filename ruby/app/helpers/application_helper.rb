@@ -26,8 +26,9 @@ module ApplicationHelper
   end
   
   def screenshot(change)
-    if change.full_screenshot.exists?
-      link_to image_tag(change.screenshot.url), change.full_screenshot.url, :title => 'View Screenshot in Full Size'
+    # if change.full_screenshot.exists?
+    if change.full_screenshot_link
+      link_to image_tag(change.screenshot.url), change.full_screenshot_link, :title => 'View Screenshot in Full Size'
     else
       image_tag change.screenshot.url
     end

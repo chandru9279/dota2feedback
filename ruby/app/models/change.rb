@@ -5,13 +5,13 @@ class Change < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => true
   validates :category, :presence => true
   
-  has_attached_file :icon, :styles => { :original => '205x115>' }, :default_url => "/missing/:style/:attachment.png"
-  has_attached_file :face, :styles => { :original => '120x115!' }, :default_url => "/missing/:style/:attachment.png"
-  has_attached_file :screenshot, :styles => { :original => '120x115!' }, :default_url => "/missing/:style/:attachment.png"
+  has_attached_file :icon, :styles => { :original => '205x115>' }
+  has_attached_file :face, :styles => { :original => '120x115!' }
+  has_attached_file :screenshot, :styles => { :original => '120x115!' }
   has_attached_file :full_screenshot, :default_url => "/missing/:style/:attachment.png"
   
-  scope :liked, order('COALESCE((likes / (likes + dislikes)), 0) DESC, (likes - dislikes) DESC, name ASC')
-  scope :hated, order('COALESCE((likes / (likes + dislikes)), 0) ASC, (likes - dislikes) ASC, name DESC')
+  scope :liked, order('COALESCE((likes / (likes + dislikes)), 0.5) DESC, (likes - dislikes) DESC, name ASC')
+  scope :hated, order('COALESCE((likes / (likes + dislikes)), 0.5) ASC, (likes - dislikes) ASC, name DESC')
   
   PER_PAGE = 5
   TYPES = ['Hero', 'Item', 'Skill', 'Miscellaneous']
@@ -28,6 +28,6 @@ class Change < ActiveRecord::Base
   end
   
   def approval
-    likes + dislikes == 0 ? 0 : ((likes.to_f / (likes.to_f + dislikes.to_f)) * 100)
+    likes + dislikes == 0 ? 50 : ((likes.to_f / (likes.to_f + dislikes.to_f)) * 100)
   end
 end

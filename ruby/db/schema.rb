@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110827011720) do
+ActiveRecord::Schema.define(:version => 20110910155829) do
 
   create_table "changes", :force => true do |t|
     t.string   "name",                                        :null => false
@@ -36,11 +36,12 @@ ActiveRecord::Schema.define(:version => 20110827011720) do
     t.string   "full_screenshot_content_type"
     t.string   "full_screenshot_file_size"
     t.string   "full_screenshot_updated_at"
+    t.string   "full_screenshot_link"
   end
 
   add_index "changes", ["category", "comments_count"], :name => "index_changes_on_category_and_comments_count"
-  add_index "changes", ["category", "dislikes", "name"], :name => "index_changes_on_category_and_dislikes_and_name"
-  add_index "changes", ["category", "likes", "name"], :name => "index_changes_on_category_and_likes_and_name"
+  add_index "changes", ["category", "dislikes", "name"], :name => "index_changes_on_category_and_dislikes"
+  add_index "changes", ["category", "likes", "name"], :name => "index_changes_on_category_and_likes"
   add_index "changes", ["category", "name"], :name => "index_changes_on_category_and_name"
 
   create_table "comments", :force => true do |t|
@@ -66,7 +67,7 @@ ActiveRecord::Schema.define(:version => 20110827011720) do
     t.datetime "updated_at",    :null => false
   end
 
-  add_index "votes", ["ip_address", "voteable_type", "voteable_id"], :name => "index_votes_on_ip_address_and_voteable_type_and_voteable_id"
+  add_index "votes", ["ip_address", "voteable_type", "voteable_id"], :name => "ip_address"
   add_index "votes", ["voteable_type", "voteable_id"], :name => "index_votes_on_voteable_type_and_voteable_id"
 
 end
