@@ -42,7 +42,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.16)
-    mysql2 (0.2.13)
+    mysql2 (0.2.6-x86-mingw32)
     paperclip (2.3.16)
       activerecord (>= 2.3.0)
       activesupport (>= 2.3.2)
@@ -83,7 +83,7 @@ PLATFORMS
 DEPENDENCIES
   dynamic_form
   gravtastic
-  mysql2 (~> 0.2.13)
+  mysql2 (~> 0.2.6)
   paperclip
   rails (= 3.0.9)
   will_paginate
