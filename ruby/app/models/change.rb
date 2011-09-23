@@ -8,7 +8,7 @@ class Change < ActiveRecord::Base
   has_attached_file :icon, :styles => { :original => '205x115>' }
   has_attached_file :face, :styles => { :original => '120x115!' }
   has_attached_file :screenshot, :styles => { :original => '120x115!' }
-  has_attached_file :full_screenshot, :default_url => "/missing/:style/:attachment.png"
+  has_attached_file :full_screenshot
   
   scope :liked, order('COALESCE((likes / (likes + dislikes)), 0.5) DESC, (likes - dislikes) DESC, name ASC')
   scope :hated, order('COALESCE((likes / (likes + dislikes)), 0.5) ASC, (likes - dislikes) ASC, name DESC')
