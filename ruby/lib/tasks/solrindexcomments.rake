@@ -1,41 +1,16 @@
-require "net/http"
-require "builder/xmlmarkup"
+require "solr_util"
 
 namespace :solr do
   task :indexcomments => :environment do
     Comment.find_in_batches(:batch_size => 500) do |comments|
-      builder = Builder::XmlMarkup.new()
-      builder.add {
-        comments.each do |comment|
-          builder.doc {
-            builder.field(comment.id, :name => :"Id")
-            builder.field(comment.text, :name => :"COMMENTS_OF_#{comment.commentable.id}")
-          }
-        end
-      }
-      updatesolr(builder.target!)
-      commitsolr
+      SolrUtil.batch_index_comments(comments)
     end
   end
 
   task :clearindex => :environment do
-    updatesolr("<delete><query>*:*</query></delete>")
-    commitsolr
+    SolrUtil.update_and_commit("<delete><query>*:*</query></delete>")
   end
 
-  def updatesolr(body)
-    url = URI.parse("http://localhost:5000/solr/update")
-    request = Net::HTTP::Post.new(url.path)
-    request.content_type = "application/xml"
-    request.body = body
-    response = Net::HTTP.start(url.host, url.port) { |http| http.request(request) }
-    puts response.to_s
-    puts response.body
-  end
-
-  def commitsolr
-    updatesolr("<commit/>")
-  end
 end
 
 

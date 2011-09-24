@@ -59,7 +59,10 @@
   <requestHandler name="/cloud" class="solr.SearchHandler">
     <lst name="defaults">
       <str name="terms.fl">Id</str>
+      <str name="terms.lower">a</str>
       <str name="terms.limit">50</str>
+      <str name="terms.regex">[\w]{3,}+</str>
+      <str name="terms.regex.flag">case_insensitive</str>
     </lst>
     <lst name="invariants">
       <str name="terms.sort">count</str>

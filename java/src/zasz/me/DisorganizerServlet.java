@@ -53,7 +53,9 @@ public class DisorganizerServlet extends javax.servlet.http.HttpServlet
         Disorganizer disorganizer = new Disorganizer(map, 1000, 1000);
         disorganizer.setAngle(0); // Not tested yet, but just might work.
         disorganizer.setMargin(10d);
-        disorganizer.setSelectedFont(DisorganizerFonts.getFont(DisorganizerFonts.AlphaFridgeMagnets()));
+        disorganizer.setMaximumFontSize(130f);
+        disorganizer.setMinimumFontSize(30f);
+        disorganizer.setSelectedFont(DisorganizerFonts.getFont(DisorganizerFonts.KenyanCoffee()));
         disorganizer.setDisplayChoice(DisplayStrategy.Get(TagDisplayStrategy.RandomHorizontalOrVertical()));
         disorganizer.setColorChoice(ColorStrategy.Get(Theme.LightBgDarkFg(), Style.Varied(), Color.WHITE, Color.RED));
         disorganizer.setVerticalTextRight(true); // Not yet implemented ('getting out borders' part also not implemented)
@@ -75,8 +77,7 @@ public class DisorganizerServlet extends javax.servlet.http.HttpServlet
         throw new Exception(message);
     }
 
-    @SuppressWarnings("Used to test with sample input")
-    private HashMap<String, Integer> getSample()
+    public HashMap<String, Integer> getSample()
     {
         String DefaultWordList = "asp.net,15:games,10:fun,15:books,5:music,8:crapo,4:dota,5:concept,2:"
                         + ".net,9:fiction,2:sci-fi,3:mystery,5:romance,4";

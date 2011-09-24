@@ -4,7 +4,6 @@ import enums.TagDisplayStrategy
 import enums.TagDisplayStrategy._
 import enums.StringFormat._
 import util.Random
-import java.util.Date
 
 
 object DisplayStrategy
@@ -23,7 +22,7 @@ object DisplayStrategy
 
 abstract class DisplayStrategy
 {
-  protected def Seed: Random = new Random(new Date().getTime)
+  protected def Seed: Random = new Random()
 
   def GetFormat(): StringFormat
 }
@@ -46,6 +45,7 @@ class RandomHorizontalOrVertical(private var Split: Double = 0.5) extends Displa
 class EqualHorizontalAndVertical() extends DisplayStrategy
 {
   private var _CurrentState: Boolean = Seed.nextBoolean()
+
   override def GetFormat(): StringFormat =
   {
     _CurrentState = !_CurrentState

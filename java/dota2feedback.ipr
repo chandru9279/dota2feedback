@@ -4,9 +4,9 @@
     <defaultAnt bundledAnt="true" />
   </component>
   <component name="ArtifactManager">
-    <artifact type="war" name="D2FWar">
+    <artifact type="war" name="d2f">
       <output-path>$PROJECT_DIR$/server/tomcat-7.0.20/webapps</output-path>
-      <root id="archive" name="D2FWar.war">
+      <root id="archive" name="d2f.war">
         <element id="javaee-facet-resources" facet="dota2feedback/web/Web" />
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
@@ -14,7 +14,6 @@
           </element>
           <element id="directory" name="lib">
             <element id="library" level="project" name="Scala" />
-            <element id="library" level="application" name="scala-library-2.9.1" />
             <element id="library" level="project" name="D2FLib" />
           </element>
         </element>
@@ -80,7 +79,7 @@
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="VcsDirectoryMappings">
-    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
   </component>
   <component name="libraryTable">
     <library name="D2FLib">
@@ -95,10 +94,18 @@
     </library>
     <library name="Scala">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../FX/scala-2.9.1.final/lib/scala-library.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../FX/scala-2.9.1.final/lib/scala-library.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
+    </library>
+    <library name="TestLibs">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/lib/test" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+      <jarDirectory url="file://$PROJECT_DIR$/lib/test" recursive="false" />
     </library>
   </component>
 </project>

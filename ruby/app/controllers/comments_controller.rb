@@ -1,3 +1,4 @@
+require "solr_util"
 class CommentsController < ApplicationController
   def index
     default_order = '(likes - dislikes) DESC, created_at ASC'
@@ -15,6 +16,7 @@ class CommentsController < ApplicationController
     @comment = Comment.new(params[:comment])
     @comment.commentable = @commentable
     if @comment.save
+      SolrUtil.index_comment(@comment)
       respond_to do |format|
         format.js do
           @id = @comment.id
@@ -29,7 +31,6 @@ class CommentsController < ApplicationController
     end
   end
   
-  
   def find_commentable
     params.each do |name, value|
       if name =~ /(.+)_id$/
@@ -38,4 +39,5 @@ class CommentsController < ApplicationController
     end
     nil
   end
+
 end
