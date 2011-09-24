@@ -12,7 +12,7 @@ import collection.mutable.ListBuffer
 import java.lang.{Double, Boolean, Math, Exception, Float}
 import collection.JavaConverters._
 import reflect.BeanProperty
-import collection.immutable.ListMap
+import collection.mutable.ListMap
 import java.awt._
 
 class Disorganizer(var InTags: java.util.Map[String, java.lang.Integer], var Width: Int, var Height: Int)
@@ -32,8 +32,8 @@ class Disorganizer(var InTags: java.util.Map[String, java.lang.Integer], var Wid
   private val _Center = new Point2D.Double(Width / 2f, Height / 2f);
   private val _SpiralEndSentinel: Point2D.Double = new Point2D.Double(_MaxEdgeSize + 10, _MaxEdgeSize + 10);
   private val _TagsSorted = ListMap[String, Int](Tags.toList.sortBy[Int](_._2): _*)
-  private val _HighestWeight: Int = _TagsSorted.last._2
-  private val _LowestWeight: Int = _TagsSorted.head._2
+  private val _HighestWeight: Int = _TagsSorted.head._2
+  private val _LowestWeight: Int = _TagsSorted.last._2
   private val _WeightSpan: Int = _HighestWeight - _LowestWeight;
   private val _Padding: Int = 8
 
