@@ -23,15 +23,19 @@ class SolrUtil
   end
 
   def self.index_comment(comment)
-    builder = Builder::XmlMarkup.new()
-    builder.add {
-      builder.doc {
-        builder.field(comment.id, :name => :"Id")
-        builder.field(comment.text, :name => :"COMMENTS_OF_#{comment.commentable.id}")
+    begin
+      builder = Builder::XmlMarkup.new()
+      builder.add {
+        builder.doc {
+          builder.field(comment.id, :name => :"Id")
+          builder.field(comment.text, :name => :"COMMENTS_OF_#{comment.commentable.id}")
+        }
       }
-    }
-    SolrUtil.update_solr(builder.target!)
-    SolrUtil.commit_solr
+      SolrUtil.update_solr(builder.target!)
+      SolrUtil.commit_solr
+    rescue
+      puts "INDEXING FAILED"
+    end
   end
 
   def self.batch_index_comments(comments)

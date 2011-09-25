@@ -3,3 +3,12 @@
 <a href="/changes/<%= change.to_param %>/votes" class="thumbs_down" title="Click to Dislike this"><%= change.dislikes %> dislikes</a>
 = <span class="result"><%= change.score %> (<%= approval(change) %>)</span><br/>
 <a href="/changes/<%= change.to_param %>/comments" class="view_comments" data-count="<%= change.comments_count %>">View comments (<%= change.comments_count %>)</a>
+&nbsp;
+<a class="comments_cloud Modal" href="#DisorganizerCloud-<%= change.id %>">As Cloud</a>
+
+<div id='DisorganizerCloud-<%= change.id %>'
+     style="display: none;"
+     data-commentable-id="<%= change.id %>"
+     data-commentable-name="<%= change.name %>"
+     class="cloud_popup">
+</div>
