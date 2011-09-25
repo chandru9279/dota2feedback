@@ -63,7 +63,7 @@ public class DisorganizerServlet extends javax.servlet.http.HttpServlet
         disorganizer.setMinimumFontSize(30f);
         disorganizer.setSelectedFont(DisorganizerFonts.getFont(DisorganizerFonts.KenyanCoffee()));
         disorganizer.setDisplayChoice(DisplayStrategy.Get(TagDisplayStrategy.RandomHorizontalOrVertical()));
-        disorganizer.setColorChoice(ColorStrategy.Get(Theme.LightBgDarkFg(), Style.Varied(), Color.WHITE, Color.RED));
+        disorganizer.setColorChoice(ColorStrategy.Get(Theme.DarkBgLightFg(), Style.Grayscale(), Color.WHITE, Color.RED));
         disorganizer.setVerticalTextRight(true); // Not yet implemented ('getting out borders' part also not implemented)
         disorganizer.setShowWordBoundaries(false);
         disorganizer.setCrop(true);
