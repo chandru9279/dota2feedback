@@ -12,7 +12,7 @@ development:
   database: dota2_development
   pool: 5
   username: root
-  password:
+  password: '9279.9279'
   host: localhost
 
 # Warning: The database defined as "test" will be erased and
@@ -25,7 +25,7 @@ test:
   database: dota2_test
   pool: 5
   username: root
-  password:
+  password: '9279.9279'
   host: localhost
 
 production:
@@ -35,6 +35,6 @@ production:
   database: dota2_production
   pool: 5
   username: root
-  password: 
+  password: '9279.9279'
   host: localhost
 
