@@ -359,12 +359,15 @@ input.button {
 .cloud_popup {
     color: Black;
     background: #FFF;
-    padding: 20px;
     position: absolute;
     z-index: 102;
-    border: 5px solid #FFAE7F;
+    border: 5px solid #FFFFFF;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+.cloud_popup img {
     border-radius: 10px;
 }
 
