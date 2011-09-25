@@ -45,14 +45,19 @@ public class DisorganizerServlet extends javax.servlet.http.HttpServlet
     {
         try
         {
+            long getStartTime = System.nanoTime();
         String commentable = request.getParameter("commentable");
         if(null == commentable || commentable.trim().isEmpty()) die("commentable parameter is required");
+            long startTime = System.nanoTime();
         TermsResponse solrResponse = gson.fromJson(doGetRequest(url + commentable), TermsResponse.class);
+            long stopTime = System.nanoTime();
+            long responseTime = stopTime - startTime;
         Map<String,Integer> map = solrResponse.toWeightedMap(); /* getSample() */
         if(0 == map.size()) die("No words from Solr.");
         Disorganizer disorganizer = new Disorganizer(map, 1000, 1000);
         disorganizer.setAngle(0); // Not tested yet, but just might work.
         disorganizer.setMargin(10d);
+        disorganizer.setSpiralRoom(15); // This determines performance : higher = faster (but higer also = more room)
         disorganizer.setMaximumFontSize(130f);
         disorganizer.setMinimumFontSize(30f);
         disorganizer.setSelectedFont(DisorganizerFonts.getFont(DisorganizerFonts.KenyanCoffee()));
@@ -61,14 +66,21 @@ public class DisorganizerServlet extends javax.servlet.http.HttpServlet
         disorganizer.setVerticalTextRight(true); // Not yet implemented ('getting out borders' part also not implemented)
         disorganizer.setShowWordBoundaries(false);
         disorganizer.setCrop(true);
+            startTime = System.nanoTime();
         BufferedImage cloud = disorganizer.Construct();
+            stopTime = System.nanoTime();
+            long constructTime = stopTime - startTime;
         response.setContentType("image/png");
         ImageIO.write(cloud, "png", response.getOutputStream());
+            long getTime = System.nanoTime() - getStartTime;
+            System.out.println("GET TIME : " + getTime);
+            System.out.println("SOLR RESPONSE : " + (responseTime / (double)getTime * 100) + " %");
+            System.out.println("CONSTRUCT : " + (constructTime / (double)getTime * 100) + " %");
         }
         catch (Exception ex)
         {
             response.setContentType("text/html");
-            response.getWriter().println(ex.getMessage());
+            response.getWriter().println("Exception : " + ex.getMessage());
         }
     }
 

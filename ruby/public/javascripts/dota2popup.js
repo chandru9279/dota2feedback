@@ -56,7 +56,7 @@ $(document).ready(function () {
                 cloudimage.load(function() {
                     $(id).center();
                 });
-                $(id).append(cloudimage);
+                $(id).html(cloudimage);
                 $('#mask').css('filter', 'alpha(opacity=80)');
                 jQuery('#mask').fadeIn(defaults.speed);
                 jQuery(id).fadeIn(defaults.speed);
