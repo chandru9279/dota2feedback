@@ -49,7 +49,8 @@ $(document).ready(function () {
                 var commentable_id = $(id).attr('data-commentable-id');
                 var commentable_name = $(id).attr('data-commentable-name');
                 var cloudimage = $('<img>', {
-                    src : 'http://localhost:5000/d2f/Disorganizer?commentable=' + commentable_id,
+                    // src : 'http://localhost:5000/d2f/Disorganizer?commentable=' + commentable_id,
+                    src : 'http://dota2feedback.com:5000/d2f/Disorganizer?commentable=' + commentable_id,
                     alt : commentable_name + ' Cloud',
                     title : commentable_name + ' Cloud'
                 });
