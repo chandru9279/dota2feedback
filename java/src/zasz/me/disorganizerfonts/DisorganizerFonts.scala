@@ -2,18 +2,17 @@ package zasz.me.disorganizerfonts
 
 import java.awt._
 import collection.immutable.ListMap
+import java.io.BufferedInputStream
 
 object DisorganizerFonts extends Enumeration
 {
   type DisorganizerFonts = Value
 
   val loadedFonts: Map[String, Font] = new ListMap[String, Font]()
-  def loadAllFonts() = {
 
-  }
   def getFont(fontname: DisorganizerFonts): Font =
   {
-    Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream(fontname.toString + ".ttf"))
+    Font.createFont(Font.TRUETYPE_FONT, new BufferedInputStream(getClass.getResourceAsStream("AlphaFridgeMagnets" + ".ttf")))
   }
 
   final val AlphaFridgeMagnets = Value("AlphaFridgeMagnets")

@@ -45,14 +45,13 @@ public class DisorganizerServlet extends javax.servlet.http.HttpServlet
     {
         try
         {
-            long getStartTime = System.nanoTime();
+//            long getStartTime = System.nanoTime();
         String commentable = request.getParameter("commentable");
         if(null == commentable || commentable.trim().isEmpty()) die("commentable parameter is required");
-
-            long startTime = System.nanoTime();
+//            long startTime = System.nanoTime();
         TermsResponse solrResponse = gson.fromJson(doGetRequest(url + commentable), TermsResponse.class);
-            long stopTime = System.nanoTime();
-            long responseTime = stopTime - startTime;
+//            long stopTime = System.nanoTime();
+//            long responseTime = stopTime - startTime;
         Map<String,Integer> map = solrResponse.toWeightedMap(); /* getSample() */
         if(0 == map.size()) die("No words from Solr.");
         Disorganizer disorganizer = new Disorganizer(map, 1000, 1000);
@@ -67,16 +66,16 @@ public class DisorganizerServlet extends javax.servlet.http.HttpServlet
         disorganizer.setVerticalTextRight(true); // Not yet implemented ('getting out borders' part also not implemented)
         disorganizer.setShowWordBoundaries(false);
         disorganizer.setCrop(true);
-            startTime = System.nanoTime();
+//            startTime = System.nanoTime();
         BufferedImage cloud = disorganizer.Construct();
-            stopTime = System.nanoTime();
-            long constructTime = stopTime - startTime;
+//            stopTime = System.nanoTime();
+//            long constructTime = stopTime - startTime;
         response.setContentType("image/png");
         ImageIO.write(cloud, "png", response.getOutputStream());
-            long getTime = System.nanoTime() - getStartTime;
-            System.out.println("GET TIME : " + getTime);
-            System.out.println("SOLR RESPONSE : " + (responseTime / (double)getTime * 100) + " %");
-            System.out.println("CONSTRUCT : " + (constructTime / (double)getTime * 100) + " %");
+//            long getTime = System.nanoTime() - getStartTime;
+//            System.out.println("GET TIME : " + getTime);
+//            System.out.println("SOLR RESPONSE : " + (responseTime / (double)getTime * 100) + " %");
+//            System.out.println("CONSTRUCT : " + (constructTime / (double)getTime * 100) + " %");
         }
         catch (Exception ex)
         {
